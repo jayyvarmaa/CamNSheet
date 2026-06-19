@@ -360,8 +360,8 @@ let recordTimerInterval = null;
 let recordDurationSec = 0;
 
 function snapPhoto() {
-    // Flash Animation (warm yellow-white flash)
-    canvasElement.style.filter = "brightness(3) sepia(0.2)";
+    // Flash Animation
+    canvasElement.style.filter = "brightness(3)";
     setTimeout(() => {
         canvasElement.style.filter = "none";
     }, 150);

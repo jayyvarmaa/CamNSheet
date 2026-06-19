@@ -1,14 +1,7 @@
 /* --- CSS Variables & Design Tokens --- */
 :root {
-    --gc-navy:  #2D4059;
-    --gc-red:   #EA5455;
-    --gc-orange:#F07B3F;
-    --gc-yellow:#FFD460;
-    --gc-navy-d:#1e2d3d;
-    --gc-navy-l:#3a536e;
-
     --bg-dark: #09090b;
-    --card-bg: rgba(24, 24, 27, 0.78);
+    --card-bg: rgba(24, 24, 27, 0.75);
     --card-border: rgba(255, 255, 255, 0.08);
     --primary: #10b981; /* Emerald green */
     --primary-hover: #059669;
@@ -38,23 +31,6 @@ body, html {
 }
 
 /* --- Layout Structure --- */
-.accent-bar {
-    height: 4px;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 60;
-    background: linear-gradient(90deg, var(--gc-navy), var(--gc-red), var(--gc-orange), var(--gc-yellow), var(--gc-navy));
-    background-size: 200% 100%;
-    animation: shift-gradient 8s linear infinite;
-}
-
-@keyframes shift-gradient {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-}
-
 .app-header {
     position: absolute;
     top: 0;
@@ -66,9 +42,7 @@ body, html {
     align-items: center;
     padding: 0 20px;
     z-index: 50;
-    background: rgba(24, 24, 27, 0.75);
-    border-bottom: 1px solid var(--card-border);
-    backdrop-filter: var(--glass-blur);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
 }
 
 .logo {
@@ -195,22 +169,20 @@ select:hover {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 20px 20px 34px 20px; /* Extra bottom padding for mobile home indicators */
+    padding: 24px 20px 34px 20px; /* Extra bottom padding for mobile home indicators */
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 50;
-    background: rgba(24, 24, 27, 0.75);
-    border-top: 1px solid var(--card-border);
-    backdrop-filter: var(--glass-blur);
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
 }
 
 .control-btn {
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: var(--text-main);
     display: flex;
     align-items: center;
@@ -221,14 +193,8 @@ select:hover {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.control-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--primary);
-}
-
 .control-btn:active {
-    transform: scale(0.90);
+    transform: scale(0.9);
 }
 
 .control-btn .icon {
@@ -273,39 +239,40 @@ select:hover {
 
 /* Snap Photo Button */
 .snap-btn {
-    width: 58px;
-    height: 58px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid #ffffff;
 }
 
 .snap-btn:active {
-    transform: scale(0.90);
+    transform: scale(0.88);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .snap-btn .icon-inner {
-    width: 36px;
-    height: 36px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: #f4f4f5;
+    background: #ffffff;
     transition: transform 0.2s;
 }
 
 /* Record Video Button */
 .record-btn {
-    width: 58px;
-    height: 58px;
-    background: rgba(239, 68, 68, 0.15);
-    border: 3px solid rgba(239, 68, 68, 0.4);
+    width: 72px;
+    height: 72px;
+    background: rgba(239, 68, 68, 0.2);
+    border: 3px solid var(--danger);
 }
 
 .record-btn:active {
-    transform: scale(0.90);
+    transform: scale(0.9);
 }
 
 .record-btn .icon-inner {
-    width: 34px;
-    height: 34px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: var(--danger);
     transition: all 0.3s;
@@ -323,7 +290,7 @@ select:hover {
 
 .timer-display {
     position: absolute;
-    bottom: 74px;
+    bottom: 84px;
     left: 50%;
     transform: translateX(-50%);
     background: var(--danger);
@@ -442,18 +409,14 @@ select:hover {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    padding: 10px 4px;
+    padding: 8px 4px;
     font-size: 11px;
     font-weight: 600;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
 }
 
-.gesture-item i {
-    font-size: 22px;
-    color: var(--primary);
+.gesture-item span {
+    font-size: 20px;
+    display: block;
     margin-bottom: 2px;
 }
 
