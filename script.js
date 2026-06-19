@@ -79,8 +79,9 @@ function detectGesture(landmarks) {
         return "ok";
     }
 
-    // L Gesture: Thumb and index open, others closed
-    if (thumbOpen && indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
+    // L Gesture: Thumb and index open, others closed, with thumb extended wide
+    const thumbIndexMcpDist = distance(landmarks[4], landmarks[5]);
+    if (thumbOpen && indexOpen && !middleOpen && !ringOpen && !pinkyOpen && thumbIndexMcpDist > 0.08) {
         return "l_sign";
     }
 
