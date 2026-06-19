@@ -138,9 +138,9 @@ function drawSpotlight(ctx, w, h, x, y) {
 function drawDot(ctx, x, y) {
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, 2 * Math.PI);
-    ctx.fillStyle = '#10b981';
+    ctx.fillStyle = '#FFD460';
     ctx.fill();
-    ctx.shadowColor = '#10b981';
+    ctx.shadowColor = '#FFD460';
     ctx.shadowBlur = 15;
     ctx.fill();
     ctx.shadowBlur = 0;
@@ -360,8 +360,8 @@ let recordTimerInterval = null;
 let recordDurationSec = 0;
 
 function snapPhoto() {
-    // Flash Animation
-    canvasElement.style.filter = "brightness(3)";
+    // Flash Animation (warm yellow-white flash)
+    canvasElement.style.filter = "brightness(3) sepia(0.2)";
     setTimeout(() => {
         canvasElement.style.filter = "none";
     }, 150);

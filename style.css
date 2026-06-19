@@ -1,12 +1,19 @@
 /* --- CSS Variables & Design Tokens --- */
 :root {
+    --gc-navy:  #2D4059;
+    --gc-red:   #EA5455;
+    --gc-orange:#F07B3F;
+    --gc-yellow:#FFD460;
+    --gc-navy-d:#1e2d3d;
+    --gc-navy-l:#3a536e;
+
     --bg-dark: #09090b;
-    --card-bg: rgba(24, 24, 27, 0.75);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --primary: #10b981; /* Emerald green */
-    --primary-hover: #059669;
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
+    --card-bg: rgba(45, 64, 89, 0.75);
+    --card-border: rgba(255, 212, 96, 0.08);
+    --primary: var(--gc-yellow);
+    --primary-hover: #e6bc4f;
+    --danger: var(--gc-red);
+    --danger-hover: #dc4849;
     --text-main: #f4f4f5;
     --text-muted: #a1a1aa;
     --glass-blur: blur(16px);
@@ -31,6 +38,22 @@ body, html {
 }
 
 /* --- Layout Structure --- */
+.accent-bar {
+    height: 4px;
+    width: 100%;
+    display: flex;
+    gap: 3px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    overflow: hidden;
+}
+.ab1 { flex: 3; background: var(--gc-navy); }
+.ab2 { flex: 2; background: var(--gc-red); }
+.ab3 { flex: 2; background: var(--gc-orange); }
+.ab4 { flex: 1; background: var(--gc-yellow); }
+
 .app-header {
     position: absolute;
     top: 0;
