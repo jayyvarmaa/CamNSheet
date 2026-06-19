@@ -105,6 +105,10 @@ function detectGesture(landmarks) {
         return "rock";
     }
     
+    if (openFingersCount === 3 && indexOpen && middleOpen && ringOpen) {
+        return "three_fingers";
+    }
+    
     if (openFingersCount === 4) {
         return "open";
     }
@@ -458,6 +462,9 @@ function onResults(results) {
                 filterStr = "url(#vhs)";
                 break;
             case "open":
+                filterStr = "none";
+                break;
+            case "three_fingers":
                 filterStr = "url(#water)";
                 break;
             case "thumbs_up":
