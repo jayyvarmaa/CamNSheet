@@ -41,18 +41,19 @@ body, html {
 .accent-bar {
     height: 4px;
     width: 100%;
-    display: flex;
-    gap: 3px;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 60;
-    overflow: hidden;
+    background: linear-gradient(90deg, var(--gc-navy), var(--gc-red), var(--gc-orange), var(--gc-yellow), var(--gc-navy));
+    background-size: 200% 100%;
+    animation: shift-gradient 8s linear infinite;
 }
-.ab1 { flex: 3; background: var(--gc-navy); }
-.ab2 { flex: 2; background: var(--gc-red); }
-.ab3 { flex: 2; background: var(--gc-orange); }
-.ab4 { flex: 1; background: var(--gc-yellow); }
+
+@keyframes shift-gradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
 
 .app-header {
     position: absolute;

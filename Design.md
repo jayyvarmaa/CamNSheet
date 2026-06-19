@@ -35,10 +35,13 @@ We use **Outfit** as the primary font family for branding, controls, and readabl
 
 ## 📱 3. Layout Regions & Navigation
 
-1.  **Header**: Dark zinc glass bar holding the camera selector, brand logo (`CamNSheet` in green), and system info settings button.
-2.  **Viewfinder**: The live full-bleed canvas stretching `100vw × 100vh` with `object-fit: cover`.
-3.  **Bottom action bar**: Floating circular controls bar using dark glass containers and high-quality Tabler SVG Icons (replacing generic emojis).
-4.  **Onboarding slide panel**: Modal sheet showcasing gesture list items with styled green icons.
+1.  **Top Accent Bar**: A 4px custom brand stripe displaying a shifting linear gradient progress/accent line that blends the brand palette seamlessly:
+    *   Navy (`#2D4059`) -> Red (`#EA5455`) -> Orange (`#F07B3F`) -> Yellow (`#FFD460`)
+    *   Animate shifting: `linear-gradient` shifts horizontally dynamically over 8 seconds.
+2.  **Header**: Dark zinc glass bar holding the camera selector, brand logo (`CamNSheet` in green), and system info settings button.
+3.  **Viewfinder**: The live full-bleed canvas stretching `100vw × 100vh` with `object-fit: cover`.
+4.  **Bottom action bar**: Floating circular controls bar using dark glass containers and high-quality Tabler SVG Icons (replacing generic emojis).
+5.  **Onboarding slide panel**: Modal sheet showcasing gesture list items with styled green icons.
 
 ---
 
