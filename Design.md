@@ -6,18 +6,17 @@ This document details the user interface (UI) style, visual language, design sys
 
 ## 🎨 1. Palette & Color Tokens
 
-CamNSheet utilizes a warm navy-and-yellow color scheme with bright highlights for semantic statuses.
+CamNSheet utilizes a professional dark-mode zinc-and-emerald color scheme with bright highlights for semantic statuses.
 
 | Variable Name | Hex Code / Value | Semantic Role |
 | :--- | :--- | :--- |
-| `--gc-navy` | `#2D4059` | Structural base, header, bottom bar base |
-| `--gc-red` | `#EA5455` | Active recording, danger states, record buttons |
-| `--gc-orange` | `#F07B3F` | Alerts, warnings, idle status states |
-| `--gc-yellow` | `#FFD460` | Primary highlights, accent text, active badges |
-| `--gc-navy-d` | `#1e2d3d` | Darker navy for panels & drawers |
-| `--gc-navy-l` | `#3a536e` | Lighter navy for hover effects and secondary borders |
-| `--card-bg` | `rgba(45, 64, 89, 0.75)` | Semi-transparent glass overlay background |
-| `--card-border` | `rgba(255, 212, 96, 0.08)` | Subtle glowing border edge |
+| `--bg-dark` | `#09090b` | Absolute dark backdrop / frame |
+| `--card-bg` | `rgba(24, 24, 27, 0.78)` | Semi-transparent glass overlay background (Zinc 900) |
+| `--card-border` | `rgba(255, 255, 255, 0.08)` | Subtle glowing border edge |
+| `--primary` | `#10b981` | Emerald green accent, brand coloring, hover states |
+| `--primary-hover` | `#059669` | Hover states for primary actions |
+| `--danger` | `#ef4444` | Active recording, danger states, record buttons |
+| `--danger-hover` | `#dc2626` | Recording button active hover states |
 
 ---
 
@@ -25,7 +24,7 @@ CamNSheet utilizes a warm navy-and-yellow color scheme with bright highlights fo
 
 We use **Outfit** as the primary font family for branding, controls, and readable components:
 
-*   **Logo Text**: `22px` | Weight `800` | Yellow accent (`#FFD460` / `CamNSheet`)
+*   **Logo Text**: `22px` | Weight `800` | Emerald accent (`#10b981` / `CamNSheet`)
 *   **Modal Headings**: `20px` to `26px` | Weight `600` | Modals / Drawers
 *   **Buttons / CTAs**: `15px` | Weight `600` | High-visibility clickables
 *   **Body Copy & Instructions**: `14px` to `15px` | Weight `400`
@@ -34,13 +33,12 @@ We use **Outfit** as the primary font family for branding, controls, and readabl
 
 ---
 
-## 📱 3. Layout Regions
+## 📱 3. Layout Regions & Navigation
 
-1.  **Top Accent Bar**: A 4px custom brand stripe displaying a multi-color progress/accent line:
-    *   Navy (`#2D4059`) -> Red (`#EA5455`) -> Orange (`#F07B3F`) -> Yellow (`#FFD460`)
-2.  **Header**: Navy glass bar holding the camera selector, brand mark, and setting toggles.
-3.  **Viewfinder**: The live full-bleed canvas stretching `100vw × 100vh` with `object-fit: cover`.
-4.  **Bottom action tray**: Navy glass bar housing the Gallery drawer triggers, camera triggers (Snap + Record), and Help controls.
+1.  **Header**: Dark zinc glass bar holding the camera selector, brand logo (`CamNSheet` in green), and system info settings button.
+2.  **Viewfinder**: The live full-bleed canvas stretching `100vw × 100vh` with `object-fit: cover`.
+3.  **Bottom action bar**: Floating circular controls bar using dark glass containers and high-quality Tabler SVG Icons (replacing generic emojis).
+4.  **Onboarding slide panel**: Modal sheet showcasing gesture list items with styled green icons.
 
 ---
 
@@ -50,10 +48,7 @@ We use **Outfit** as the primary font family for branding, controls, and readabl
     ```css
     .control-btn:active { transform: scale(0.90); }
     ```
-*   **Recording Pulse**: The record button triggers a red radial breathing shadow while morphing into a rounded square:
-    ```css
-    @keyframes pulse-red { ... }
-    ```
+*   **Recording Pulse**: The record button triggers a red radial breathing shadow while morphing into a rounded square.
 *   **Warm Shutter Flash**: Snapping a photo triggers a brief, high-contrast warm sepia flash instead of cold white:
     ```javascript
     canvasElement.style.filter = "brightness(3) sepia(0.2)";

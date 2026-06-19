@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CamNSheet - Interactive Hand Tracking Camera</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Tabler Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     
     <!-- MediaPipe Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -25,7 +26,9 @@
             <select id="cameraSelect">
                 <option value="">Loading cameras...</option>
             </select>
-            <button id="toggle-debug-btn" class="icon-btn" title="Toggle System Info">⚙️</button>
+            <button id="toggle-debug-btn" class="icon-btn" title="Toggle System Info">
+                <i class="ti ti-settings"></i>
+            </button>
         </div>
     </header>
 
@@ -44,7 +47,7 @@
             <div class="onboarding-slides">
                 <!-- Slide 1: Welcome -->
                 <div class="slide active">
-                    <div class="slide-icon">✨</div>
+                    <div class="slide-icon"><i class="ti ti-sparkles" style="color: var(--primary);"></i></div>
                     <h2>Welcome to CamNSheet</h2>
                     <p>Experience an AI-powered camera that morphs and responds to your hand gestures in real-time!</p>
                 </div>
@@ -52,24 +55,24 @@
                 <div class="slide">
                     <h3>Single-Hand Gestures</h3>
                     <div class="gesture-grid">
-                        <div class="gesture-item"><span>✊</span> Fist<br><small>Dither Filter</small></div>
-                        <div class="gesture-item"><span>✌️</span> Peace<br><small>VHS Glitch</small></div>
-                        <div class="gesture-item"><span>☝️</span> Index<br><small>Spotlight</small></div>
-                        <div class="gesture-item"><span>🖐️</span> Open<br><small>Water Ripple</small></div>
-                        <div class="gesture-item"><span>👍</span> Thumb Up<br><small>Invert Colors</small></div>
-                        <div class="gesture-item"><span>🤘</span> Rock On<br><small>Sepia Tone</small></div>
-                        <div class="gesture-item"><span>🤙</span> Call Me<br><small>Psychedelic</small></div>
+                        <div class="gesture-item"><i class="ti ti-hand-grab"></i> Fist<br><small>Dither Filter</small></div>
+                        <div class="gesture-item"><i class="ti ti-hand-two-fingers"></i> Peace<br><small>VHS Glitch</small></div>
+                        <div class="gesture-item"><i class="ti ti-hand-finger"></i> Index<br><small>Spotlight</small></div>
+                        <div class="gesture-item"><i class="ti ti-hand-stop"></i> Open<br><small>Water Ripple</small></div>
+                        <div class="gesture-item"><i class="ti ti-thumb-up"></i> Thumb Up<br><small>Invert Colors</small></div>
+                        <div class="gesture-item"><i class="ti ti-brand-meta"></i> Rock On<br><small>Sepia Tone</small></div>
+                        <div class="gesture-item"><i class="ti ti-phone"></i> Call Me<br><small>Psychedelic</small></div>
                     </div>
                 </div>
                 <!-- Slide 3: Two Hand Gestures -->
                 <div class="slide">
-                    <div class="slide-icon">🔍</div>
+                    <div class="slide-icon"><i class="ti ti-zoom-in" style="color: var(--primary);"></i></div>
                     <h3>Two-Hand Zoom</h3>
-                    <p>Point both index fingers (☝️ + ☝️) at the camera to summon the <b>Magnifying Glass</b>. Move your fingers apart or together to change the magnification zone!</p>
+                    <p>Point both index fingers at the camera to summon the <b>Magnifying Glass</b>. Move your fingers apart or together to change the magnification zone!</p>
                 </div>
                 <!-- Slide 4: Photo, Video & Gallery -->
                 <div class="slide">
-                    <div class="slide-icon">📸</div>
+                    <div class="slide-icon"><i class="ti ti-camera" style="color: var(--primary);"></i></div>
                     <h3>Capture the Magic</h3>
                     <p>Use the action buttons at the bottom to snap photos or record videos. They will be saved to your local session gallery for quick preview and download.</p>
                 </div>
@@ -92,7 +95,7 @@
         <div class="modal-card gallery-card">
             <div class="gallery-header">
                 <h3>Session Gallery</h3>
-                <button id="close-gallery-btn" class="close-btn">&times;</button>
+                <button id="close-gallery-btn" class="close-btn"><i class="ti ti-x"></i></button>
             </div>
             <div id="gallery-grid" class="gallery-grid">
                 <div class="empty-gallery-msg">No photos or videos captured yet. Make a gesture and click snap!</div>
@@ -103,7 +106,7 @@
     <!-- Fullscreen Media Preview Modal -->
     <div id="preview-overlay" class="modal-overlay preview-overlay">
         <div class="preview-container">
-            <button id="close-preview-btn" class="close-btn">&times;</button>
+            <button id="close-preview-btn" class="close-btn"><i class="ti ti-x"></i></button>
             <div id="preview-content"></div>
             <div class="preview-actions">
                 <a id="download-preview-btn" class="btn btn-primary" download>Download</a>
@@ -125,7 +128,7 @@
     <div class="bottom-bar">
         <!-- Gallery Trigger -->
         <button id="gallery-btn" class="control-btn" title="View Gallery">
-            <span class="icon">🖼️</span>
+            <span class="icon"><i class="ti ti-photo"></i></span>
             <span id="gallery-badge" class="badge">0</span>
         </button>
 
@@ -144,7 +147,7 @@
 
         <!-- Help/Info Trigger -->
         <button id="help-btn" class="control-btn" title="Show Help">
-            <span class="icon">❓</span>
+            <span class="icon"><i class="ti ti-help"></i></span>
         </button>
     </div>
 

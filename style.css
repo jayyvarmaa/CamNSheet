@@ -8,12 +8,12 @@
     --gc-navy-l:#3a536e;
 
     --bg-dark: #09090b;
-    --card-bg: rgba(45, 64, 89, 0.75);
-    --card-border: rgba(255, 212, 96, 0.08);
-    --primary: var(--gc-yellow);
-    --primary-hover: #e6bc4f;
-    --danger: var(--gc-red);
-    --danger-hover: #dc4849;
+    --card-bg: rgba(24, 24, 27, 0.78);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --primary: #10b981; /* Emerald green */
+    --primary-hover: #059669;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
     --text-main: #f4f4f5;
     --text-muted: #a1a1aa;
     --glass-blur: blur(16px);
@@ -65,7 +65,7 @@ body, html {
     align-items: center;
     padding: 0 20px;
     z-index: 50;
-    background: rgba(45, 64, 89, 0.75);
+    background: rgba(24, 24, 27, 0.75);
     border-bottom: 1px solid var(--card-border);
     backdrop-filter: var(--glass-blur);
 }
@@ -78,7 +78,7 @@ body, html {
 }
 
 .logo span {
-    color: var(--gc-yellow);
+    color: var(--primary);
 }
 
 .header-controls {
@@ -103,7 +103,7 @@ select {
 }
 
 select:hover {
-    border-color: rgba(255, 212, 96, 0.25);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .icon-btn {
@@ -123,7 +123,7 @@ select:hover {
 }
 
 .icon-btn:hover {
-    border-color: rgba(255, 212, 96, 0.25);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
 }
 
@@ -199,7 +199,7 @@ select:hover {
     justify-content: space-between;
     align-items: center;
     z-index: 50;
-    background: rgba(45, 64, 89, 0.75);
+    background: rgba(24, 24, 27, 0.75);
     border-top: 1px solid var(--card-border);
     backdrop-filter: var(--glass-blur);
 }
@@ -207,10 +207,10 @@ select:hover {
 .control-btn {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
-    background: rgba(45, 64, 89, 0.5);
-    border: 1px solid rgba(255, 212, 96, 0.15);
-    color: var(--gc-yellow);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -218,6 +218,12 @@ select:hover {
     cursor: pointer;
     backdrop-filter: var(--glass-blur);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--primary);
 }
 
 .control-btn:active {
@@ -232,7 +238,7 @@ select:hover {
     position: absolute;
     top: -5px;
     right: -5px;
-    background: var(--gc-red);
+    background: var(--primary);
     color: white;
     font-size: 11px;
     font-weight: 800;
@@ -243,7 +249,7 @@ select:hover {
     align-items: center;
     justify-content: center;
     padding: 0 4px;
-    border: 2px solid var(--gc-navy);
+    border: 2px solid var(--bg-dark);
 }
 
 /* Capture Action Buttons */
@@ -268,8 +274,8 @@ select:hover {
 .snap-btn {
     width: 58px;
     height: 58px;
-    background: rgba(45, 64, 89, 0.4);
-    border: 3px solid rgba(255, 212, 96, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.3);
 }
 
 .snap-btn:active {
@@ -288,8 +294,8 @@ select:hover {
 .record-btn {
     width: 58px;
     height: 58px;
-    background: rgba(234, 84, 85, 0.2);
-    border: 3px solid rgba(234, 84, 85, 0.5);
+    background: rgba(239, 68, 68, 0.15);
+    border: 3px solid rgba(239, 68, 68, 0.4);
 }
 
 .record-btn:active {
@@ -300,7 +306,7 @@ select:hover {
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: var(--gc-red);
+    background: var(--danger);
     transition: all 0.3s;
 }
 
@@ -319,7 +325,7 @@ select:hover {
     bottom: 74px;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--gc-red);
+    background: var(--danger);
     color: white;
     font-size: 12px;
     font-weight: 700;
@@ -329,7 +335,7 @@ select:hover {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
-    box-shadow: 0 4px 12px rgba(234, 84, 85, 0.3);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .timer-display.active {
@@ -432,17 +438,21 @@ select:hover {
 }
 
 .gesture-item {
-    background: rgba(45, 64, 89, 0.4);
-    border: 1px solid rgba(255, 212, 96, 0.15);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    padding: 8px 4px;
+    padding: 10px 4px;
     font-size: 11px;
     font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
 }
 
-.gesture-item span {
-    font-size: 20px;
-    display: block;
+.gesture-item i {
+    font-size: 22px;
+    color: var(--primary);
     margin-bottom: 2px;
 }
 
