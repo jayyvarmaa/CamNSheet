@@ -204,14 +204,14 @@ function onResults(results) {
     let currentGesture = "unknown";
     let isMagnifying = false;
 
-    // Detect magnifying glass (two hands)
+    // Detect magnifying glass (two hands doing "peace" sign)
     if (results.multiHandLandmarks && results.multiHandLandmarks.length >= 2) {
         const gesture1 = detectGesture(results.multiHandLandmarks[0]);
         const gesture2 = detectGesture(results.multiHandLandmarks[1]);
         
-        if (gesture1 === "index" && gesture2 === "index") {
-            const tip1 = results.multiHandLandmarks[0][8];
-            const tip2 = results.multiHandLandmarks[1][8];
+        if (gesture1 === "peace" && gesture2 === "peace") {
+            const tip1 = results.multiHandLandmarks[0][8]; // index tip
+            const tip2 = results.multiHandLandmarks[1][8]; // index tip
             
             const x1 = tip1.x * canvasElement.width;
             const y1 = tip1.y * canvasElement.height;
@@ -224,20 +224,26 @@ function onResults(results) {
                 isMagnifying = true;
                 currentGesture = "magnify";
                 
-                // Draw normal video background first
+                // 1. Draw normal background video
                 canvasCtx.filter = "none";
                 canvasCtx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
                 
+                // 2. Draw spotlight shadow mask (dim the background)
+                canvasCtx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+                canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+                
                 const midX = (x1 + x2) / 2;
                 const midY = (y1 + y2) / 2;
-                const radius = Math.max(60, dist / 2);
+                const radius = Math.max(70, dist / 2.2);
                 
+                // 3. Clip and draw the zoomed camera view (clear & bright)
                 canvasCtx.save();
                 canvasCtx.beginPath();
                 canvasCtx.arc(midX, midY, radius, 0, Math.PI * 2);
                 canvasCtx.clip();
                 
-                const scale = 2;
+                // Pinch to Zoom Scale Math
+                const scale = Math.min(5.0, Math.max(1.2, dist / 150));
                 let sx = midX - radius / scale;
                 let sy = midY - radius / scale;
                 let sWidth = (radius * 2) / scale;
@@ -251,11 +257,31 @@ function onResults(results) {
                 if (sWidth > 0 && sHeight > 0) {
                     canvasCtx.drawImage(videoElement, sx, sy, sWidth, sHeight, midX - radius, midY - radius, sWidth * scale, sHeight * scale);
                 }
+                canvasCtx.restore();
                 
-                canvasCtx.lineWidth = 12;
-                canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+                // 4. Draw glowing neon border around the lens
+                canvasCtx.save();
+                canvasCtx.beginPath();
+                canvasCtx.arc(midX, midY, radius, 0, Math.PI * 2);
+                canvasCtx.lineWidth = 8;
+                canvasCtx.strokeStyle = 'var(--gc-yellow)';
+                canvasCtx.shadowColor = 'var(--gc-yellow)';
+                canvasCtx.shadowBlur = 20;
+                canvasCtx.stroke();
+                
+                canvasCtx.lineWidth = 2;
+                canvasCtx.strokeStyle = '#ffffff';
+                canvasCtx.shadowBlur = 0;
                 canvasCtx.stroke();
                 canvasCtx.restore();
+                
+                // 5. Draw active status text inside the lens
+                canvasCtx.font = "bold 20px Arial";
+                canvasCtx.fillStyle = "var(--gc-yellow)";
+                canvasCtx.shadowColor = "rgba(0,0,0,0.5)";
+                canvasCtx.shadowBlur = 4;
+                canvasCtx.fillText(`ZOOM: ${scale.toFixed(1)}x`, midX - 50, midY + radius + 30);
+                canvasCtx.shadowBlur = 0;
                 
                 drawDot(canvasCtx, x1, y1);
                 drawDot(canvasCtx, x2, y2);
