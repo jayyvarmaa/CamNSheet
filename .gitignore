@@ -1,0 +1,14 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Media/Temp uploads
+*.png
+*.jpg
+*.jpeg
+*.webm
+*.mp4
+image.png
+
+# Logs
+*.log
