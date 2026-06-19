@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Tracking</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- MediaPipe Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="controls">
+        <select id="cameraSelect">
+            <option value="">Loading cameras...</option>
+        </select>
+    </div>
+
+    <div class="instructions">
+        <h3>How to use:</h3>
+        <ul>
+            <li>✊ <b>Fist:</b> Dither Effect</li>
+            <li>✌️ <b>Peace Sign:</b> VHS Glitch</li>
+            <li>☝️ <b>Index Finger:</b> Spotlight</li>
+            <li>🖐️ <b>Open Hand:</b> Water Ripple</li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <video class="input_video" autoplay playsinline></video>
+        <div id="vhs-overlay" class="effect-overlay"></div>
+        <div id="dither-overlay" class="effect-overlay"></div>
+        <canvas id="spotlight-overlay" class="effect-overlay"></canvas>
+        <canvas class="output_canvas"></canvas>
+    </div>
+    
+    <!-- SVG Filters -->
+    <svg width="0" height="0" style="position:absolute;z-index:-1;">
+        <defs>
+            <!-- VHS Chromatic Aberration -->
+            <filter id="vhs">
+                <feOffset dx="6" dy="0" in="SourceGraphic" result="red-shift" />
+                <feOffset dx="-6" dy="0" in="SourceGraphic" result="blue-shift" />
+                <feColorMatrix type="matrix" in="red-shift" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red-only" />
+                <feColorMatrix type="matrix" in="SourceGraphic" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green-only" />
+                <feColorMatrix type="matrix" in="blue-shift" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue-only" />
+                <feBlend mode="screen" in="red-only" in2="green-only" result="rg" />
+                <feBlend mode="screen" in="rg" in2="blue-only" result="rgb" />
+            </filter>
+
+            <!-- Water Ripple -->
+            <filter id="water">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise">
+                    <animate attributeName="baseFrequency" values="0.015;0.025;0.015" dur="4s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="40" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+    
+    <script src="script.js"></script>
+</body>
+</html>
