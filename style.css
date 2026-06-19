@@ -1,16 +1,38 @@
 /* --- CSS Variables & Design Tokens --- */
 :root {
-    --bg-dark: #09090b;
-    --card-bg: rgba(24, 24, 27, 0.75);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --primary: #10b981; /* Emerald green */
-    --primary-hover: #059669;
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
+    --gc-navy: #2D4059;
+    --gc-red: #EA5455;
+    --gc-orange: #F07B3F;
+    --gc-yellow: #FFD460;
+
+    --bg-dark: #16212e; /* Dark slate navy tint derived from --gc-navy */
+    --card-bg: rgba(45, 64, 89, 0.75); /* transparent --gc-navy */
+    --card-border: rgba(255, 255, 255, 0.1);
+    --primary: var(--gc-orange);
+    --primary-hover: #d3642c;
+    --danger: var(--gc-red);
+    --danger-hover: #c43f40;
     --text-main: #f4f4f5;
-    --text-muted: #a1a1aa;
+    --text-muted: #cbd5e1;
     --glass-blur: blur(16px);
     --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.accent-bar {
+    height: 4px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    background: linear-gradient(90deg, var(--gc-navy), var(--gc-red), var(--gc-orange), var(--gc-yellow), var(--gc-navy));
+    background-size: 200% 100%;
+    animation: shift-gradient 8s linear infinite;
+}
+
+@keyframes shift-gradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
 }
 
 /* --- Base & Reset --- */

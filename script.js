@@ -138,9 +138,9 @@ function drawSpotlight(ctx, w, h, x, y) {
 function drawDot(ctx, x, y) {
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, 2 * Math.PI);
-    ctx.fillStyle = '#10b981';
+    ctx.fillStyle = '#F07B3F';
     ctx.fill();
-    ctx.shadowColor = '#10b981';
+    ctx.shadowColor = '#F07B3F';
     ctx.shadowBlur = 15;
     ctx.fill();
     ctx.shadowBlur = 0;
