@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hand Tracking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GesturCam - Interactive Hand Tracking Camera</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <!-- MediaPipe Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -13,31 +15,137 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="controls">
-        <select id="cameraSelect">
-            <option value="">Loading cameras...</option>
-        </select>
-    </div>
+    <!-- Premium Header -->
+    <header class="app-header">
+        <div class="logo">Gestur<span>Cam</span></div>
+        <div class="header-controls">
+            <select id="cameraSelect">
+                <option value="">Loading cameras...</option>
+            </select>
+            <button id="toggle-debug-btn" class="icon-btn" title="Toggle System Info">⚙️</button>
+        </div>
+    </header>
 
-    <div class="instructions">
-        <h3>How to use:</h3>
-        <ul>
-            <li>✊ <b>Fist:</b> Dither Effect</li>
-            <li>✌️ <b>Peace Sign:</b> VHS Glitch</li>
-            <li>☝️ <b>Index Finger:</b> Spotlight</li>
-            <li>🖐️ <b>Open Hand:</b> Water Ripple</li>
-        </ul>
-    </div>
-
-    <div class="container">
-        <video class="input_video" autoplay playsinline></video>
+    <!-- Main Viewfinder Container -->
+    <main class="viewfinder">
+        <video class="input_video" autoplay playsinline muted></video>
         <div id="vhs-overlay" class="effect-overlay"></div>
         <div id="dither-overlay" class="effect-overlay"></div>
         <canvas id="spotlight-overlay" class="effect-overlay"></canvas>
         <canvas class="output_canvas"></canvas>
+    </main>
+
+    <!-- Onboarding / Welcome Tour Overlay -->
+    <div id="onboarding-overlay" class="modal-overlay">
+        <div class="modal-card onboarding-card">
+            <div class="onboarding-slides">
+                <!-- Slide 1: Welcome -->
+                <div class="slide active">
+                    <div class="slide-icon">✨</div>
+                    <h2>Welcome to GesturCam</h2>
+                    <p>Experience an AI-powered camera that morphs and responds to your hand gestures in real-time!</p>
+                </div>
+                <!-- Slide 2: Single Hand Gestures -->
+                <div class="slide">
+                    <h3>Single-Hand Gestures</h3>
+                    <div class="gesture-grid">
+                        <div class="gesture-item"><span>✊</span> Fist<br><small>Dither Filter</small></div>
+                        <div class="gesture-item"><span>✌️</span> Peace<br><small>VHS Glitch</small></div>
+                        <div class="gesture-item"><span>☝️</span> Index<br><small>Spotlight</small></div>
+                        <div class="gesture-item"><span>🖐️</span> Open<br><small>Water Ripple</small></div>
+                        <div class="gesture-item"><span>👍</span> Thumb Up<br><small>Invert Colors</small></div>
+                        <div class="gesture-item"><span>🤘</span> Rock On<br><small>Sepia Tone</small></div>
+                        <div class="gesture-item"><span>🤙</span> Call Me<br><small>Psychedelic</small></div>
+                    </div>
+                </div>
+                <!-- Slide 3: Two Hand Gestures -->
+                <div class="slide">
+                    <div class="slide-icon">🔍</div>
+                    <h3>Two-Hand Zoom</h3>
+                    <p>Point both index fingers (☝️ + ☝️) at the camera to summon the <b>Magnifying Glass</b>. Move your fingers apart or together to change the magnification zone!</p>
+                </div>
+                <!-- Slide 4: Photo, Video & Gallery -->
+                <div class="slide">
+                    <div class="slide-icon">📸</div>
+                    <h3>Capture the Magic</h3>
+                    <p>Use the action buttons at the bottom to snap photos or record videos. They will be saved to your local session gallery for quick preview and download.</p>
+                </div>
+            </div>
+            <div class="onboarding-footer">
+                <button id="prev-slide-btn" class="btn btn-secondary disabled">Back</button>
+                <div class="slide-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <button id="next-slide-btn" class="btn btn-primary">Next</button>
+            </div>
+        </div>
     </div>
-    
-    <!-- SVG Filters -->
+
+    <!-- Gallery Sheet/Modal -->
+    <div id="gallery-overlay" class="modal-overlay">
+        <div class="modal-card gallery-card">
+            <div class="gallery-header">
+                <h3>Session Gallery</h3>
+                <button id="close-gallery-btn" class="close-btn">&times;</button>
+            </div>
+            <div id="gallery-grid" class="gallery-grid">
+                <div class="empty-gallery-msg">No photos or videos captured yet. Make a gesture and click snap!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Media Preview Modal -->
+    <div id="preview-overlay" class="modal-overlay preview-overlay">
+        <div class="preview-container">
+            <button id="close-preview-btn" class="close-btn">&times;</button>
+            <div id="preview-content"></div>
+            <div class="preview-actions">
+                <a id="download-preview-btn" class="btn btn-primary" download>Download</a>
+                <button id="delete-preview-btn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- On-screen System Diagnostics -->
+    <div id="debug-panel" class="debug-panel collapsed">
+        <h4>System Status</h4>
+        <div class="debug-item">Camera: <span id="debug-camera">Initializing...</span></div>
+        <div class="debug-item">MediaPipe: <span id="debug-mediapipe">Loading...</span></div>
+        <div class="debug-item">Active Gesture: <span id="debug-gesture">None</span></div>
+        <div id="debug-log-console" class="debug-log-console"></div>
+    </div>
+
+    <!-- Mobile-First Bottom Control Bar -->
+    <div class="bottom-bar">
+        <!-- Gallery Trigger -->
+        <button id="gallery-btn" class="control-btn" title="View Gallery">
+            <span class="icon">🖼️</span>
+            <span id="gallery-badge" class="badge">0</span>
+        </button>
+
+        <!-- Capture Trigger Group -->
+        <div class="capture-actions">
+            <!-- Snap Photo -->
+            <button id="snap-photo-btn" class="capture-btn snap-btn" title="Take Photo">
+                <span class="icon-inner"></span>
+            </button>
+            <!-- Record Video -->
+            <button id="record-video-btn" class="capture-btn record-btn" title="Record Video">
+                <span class="icon-inner"></span>
+            </button>
+            <span id="recording-timer" class="timer-display">00:00</span>
+        </div>
+
+        <!-- Help/Info Trigger -->
+        <button id="help-btn" class="control-btn" title="Show Help">
+            <span class="icon">❓</span>
+        </button>
+    </div>
+
+    <!-- SVG Filters for Gestures -->
     <svg width="0" height="0" style="position:absolute;z-index:-1;">
         <defs>
             <!-- VHS Chromatic Aberration -->
