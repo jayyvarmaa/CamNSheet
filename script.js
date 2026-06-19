@@ -72,6 +72,17 @@ function detectGesture(landmarks) {
     const ringOpen = isFingerOpen(landmarks, 16, 14);
     const pinkyOpen = isFingerOpen(landmarks, 20, 18);
     
+    // OK Gesture: Tip of thumb (4) and index (8) close together, others open
+    const thumbIndexDist = distance(landmarks[4], landmarks[8]);
+    if (thumbIndexDist < 0.05 && middleOpen && ringOpen && pinkyOpen) {
+        return "ok";
+    }
+
+    // L Gesture: Thumb and index open, middle/ring/pinky closed
+    if (thumbOpen && indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
+        return "l_sign";
+    }
+    
     if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
         if (thumbOpen) return "thumbs_up";
         return "fist";
@@ -117,6 +128,38 @@ function drawVHSOverlay(ctx, w, h) {
     ctx.fillText('PLAY 📁', 30, h - 30);
     const now = new Date();
     ctx.fillText(`JUN 19 2026  ${now.toTimeString().split(' ')[0]}`, w - 240, h - 30);
+}
+
+let matrixColumns = [];
+function drawMatrixRain(ctx, w, h) {
+    ctx.save();
+    // Dark green tinted overlay
+    ctx.fillStyle = 'rgba(0, 20, 0, 0.15)';
+    ctx.fillRect(0, 0, w, h);
+    
+    ctx.fillStyle = '#00ff66';
+    ctx.font = 'bold 13px monospace';
+    ctx.shadowColor = '#00ff66';
+    ctx.shadowBlur = 4;
+    
+    const cols = Math.floor(w / 14);
+    if (matrixColumns.length !== cols) {
+        matrixColumns = Array(cols).fill(0).map(() => Math.floor(Math.random() * -50));
+    }
+    
+    for (let i = 0; i < matrixColumns.length; i++) {
+        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+        const x = i * 14;
+        const y = matrixColumns[i] * 14;
+        ctx.fillText(char, x, y);
+        
+        if (y > h && Math.random() > 0.97) {
+            matrixColumns[i] = 0;
+        } else {
+            matrixColumns[i]++;
+        }
+    }
+    ctx.restore();
 }
 
 function drawSpotlight(ctx, w, h, x, y) {
@@ -249,6 +292,12 @@ function onResults(results) {
             case "call":
                 filterStr = "hue-rotate(200deg) saturate(300%)";
                 break;
+            case "ok":
+                filterStr = "grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(300%)";
+                break;
+            case "l_sign":
+                filterStr = "none";
+                break;
         }
         
         // Draw image with direct filter context
@@ -261,6 +310,18 @@ function onResults(results) {
             drawDitherPattern(canvasCtx, canvasElement.width, canvasElement.height);
         } else if (currentGesture === "peace") {
             drawVHSOverlay(canvasCtx, canvasElement.width, canvasElement.height);
+        } else if (currentGesture === "ok") {
+            drawMatrixRain(canvasCtx, canvasElement.width, canvasElement.height);
+        } else if (currentGesture === "l_sign") {
+            canvasCtx.save();
+            canvasCtx.globalCompositeOperation = 'difference';
+            canvasCtx.drawImage(videoElement, 3, 3, canvasElement.width, canvasElement.height);
+            canvasCtx.restore();
+            
+            canvasCtx.save();
+            canvasCtx.filter = "invert(100%) contrast(300%) grayscale(100%) hue-rotate(180deg) saturate(1000%)";
+            canvasCtx.drawImage(canvasElement, 0, 0);
+            canvasCtx.restore();
         } else if (currentGesture === "index" && trackingLandmarks) {
             const indexTip = trackingLandmarks[8];
             const x = indexTip.x * canvasElement.width;
