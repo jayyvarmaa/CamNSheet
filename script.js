@@ -122,16 +122,88 @@ function detectGesture(landmarks) {
 }
 
 // Repeating pattern generators
+let ditherPattern = null;
+function initDitherPattern(ctx) {
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = 4;
+    tempCanvas.height = 4;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+    tempCtx.fillRect(0, 0, 1, 1);
+    tempCtx.fillRect(2, 2, 1, 1);
+    ditherPattern = ctx.createPattern(tempCanvas, 'repeat');
+}
+
 function drawDitherPattern(ctx, w, h) {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-    const size = 6;
-    for (let y = 0; y < h; y += size) {
-        for (let x = 0; x < w; x += size) {
-            if ((x + y) % (size * 2) === 0) {
-                ctx.fillRect(x, y, 2, 2);
-            }
-        }
+    if (!ditherPattern) {
+        initDitherPattern(ctx);
     }
+    ctx.save();
+    ctx.fillStyle = ditherPattern;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+}
+
+let shieldAngle = 0;
+function drawMysticShield(ctx, x, y, radius) {
+    shieldAngle += 0.05; // Rotation speed
+    ctx.save();
+    ctx.translate(x, y);
+    
+    // Core settings
+    ctx.strokeStyle = '#F07B3F'; // Orange glow
+    ctx.shadowColor = '#FFD460'; // Gold yellow glow
+    ctx.shadowBlur = 12;
+    
+    // Outer glowing rim
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Inner dashed ring rotating clockwise
+    ctx.save();
+    ctx.rotate(shieldAngle);
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 8]);
+    ctx.beginPath();
+    ctx.arc(0, 0, radius - 10, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    
+    // 12-pointed geometric star rotating counterclockwise
+    ctx.save();
+    ctx.rotate(-shieldAngle * 1.5);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i < 12; i++) {
+        ctx.rotate(Math.PI / 6);
+        ctx.moveTo(0, -radius + 18);
+        ctx.lineTo(0, radius - 18);
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    // Solid inner ring
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius - 24, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Center core rotating sparks
+    ctx.save();
+    ctx.rotate(shieldAngle * 2.5);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+        ctx.rotate(Math.PI / 3);
+        ctx.moveTo(0, -6);
+        ctx.lineTo(0, 6);
+    }
+    ctx.stroke();
+    ctx.restore();
+    
+    ctx.restore();
 }
 
 function drawVHSOverlay(ctx, w, h) {
@@ -233,12 +305,12 @@ function onResults(results) {
     let currentGesture = "unknown";
     let isMagnifying = false;
 
-    // Detect magnifying glass (two hands doing "peace" sign)
+    // Detect magnifying glass (two hands doing "index" or "peace" sign)
     if (results.multiHandLandmarks && results.multiHandLandmarks.length >= 2) {
         const gesture1 = detectGesture(results.multiHandLandmarks[0]);
         const gesture2 = detectGesture(results.multiHandLandmarks[1]);
         
-        if (gesture1 === "peace" && gesture2 === "peace") {
+        if ((gesture1 === "index" || gesture1 === "peace") && (gesture2 === "index" || gesture2 === "peace")) {
             const tip1 = results.multiHandLandmarks[0][8]; // index tip
             const tip2 = results.multiHandLandmarks[1][8]; // index tip
             
@@ -367,6 +439,15 @@ function onResults(results) {
             drawVHSOverlay(canvasCtx, canvasElement.width, canvasElement.height);
         } else if (currentGesture === "ok") {
             drawMatrixRain(canvasCtx, canvasElement.width, canvasElement.height);
+        } else if (currentGesture === "open" && trackingLandmarks) {
+            const mcp = trackingLandmarks[9];
+            const x = mcp.x * canvasElement.width;
+            const y = mcp.y * canvasElement.height;
+            const wrist = trackingLandmarks[0];
+            const dx = (mcp.x - wrist.x) * canvasElement.width;
+            const dy = (mcp.y - wrist.y) * canvasElement.height;
+            const shieldRadius = Math.max(60, Math.sqrt(dx * dx + dy * dy) * 1.25);
+            drawMysticShield(canvasCtx, x, y, shieldRadius);
         } else if (currentGesture === "l_sign") {
             canvasCtx.save();
             canvasCtx.globalCompositeOperation = 'difference';
