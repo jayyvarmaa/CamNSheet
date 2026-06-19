@@ -89,7 +89,7 @@ function detectGesture(landmarks) {
     const openFingersCount = [indexOpen, middleOpen, ringOpen, pinkyOpen].filter(Boolean).length;
 
     if (openFingersCount === 0) {
-        if (thumbOpen) return "thumbs_up";
+        if (thumbOpen && landmarks[4].y < landmarks[5].y) return "thumbs_up";
         return "fist";
     }
     
@@ -144,9 +144,59 @@ function drawDitherPattern(ctx, w, h) {
     ctx.restore();
 }
 
+let mysticParticles = [];
+class MysticParticle {
+    constructor(x, y, radius) {
+        // Spawn particles along the outer boundary of the circular shield
+        const angle = Math.random() * Math.PI * 2;
+        this.x = x + Math.cos(angle) * radius;
+        this.y = y + Math.sin(angle) * radius;
+        // Particle moves outwards with a circular spinning velocity bias
+        const spinForce = 1.5 + Math.random() * 2.0;
+        this.vx = (Math.cos(angle) * (0.5 + Math.random() * 1.5)) - (Math.sin(angle) * spinForce);
+        this.vy = (Math.sin(angle) * (0.5 + Math.random() * 1.5)) + (Math.cos(angle) * spinForce);
+        this.life = 1.0;
+        this.decay = 0.015 + Math.random() * 0.025;
+        this.color = Math.random() > 0.4 ? '#F07B3F' : '#FFD460';
+        this.size = 1.5 + Math.random() * 3.5;
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.96; // slight drag
+        this.vy *= 0.96;
+        this.life -= this.decay;
+    }
+    draw(ctx) {
+        ctx.save();
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.life;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
 let shieldAngle = 0;
 function drawMysticShield(ctx, x, y, radius) {
     shieldAngle += 0.05; // Rotation speed
+    
+    // Spawn spark particles on the rim of the shield
+    for (let i = 0; i < 4; i++) {
+        mysticParticles.push(new MysticParticle(x, y, radius));
+    }
+    
+    // Update and draw sparkles
+    mysticParticles.forEach(p => {
+        p.update();
+        p.draw(ctx);
+    });
+    // Filter dead particles
+    mysticParticles = mysticParticles.filter(p => p.life > 0 && p.x > 0 && p.y > 0);
+
     ctx.save();
     ctx.translate(x, y);
     
@@ -455,7 +505,7 @@ function onResults(results) {
             canvasCtx.restore();
             
             canvasCtx.save();
-            canvasCtx.filter = "invert(100%) contrast(300%) grayscale(100%) hue-rotate(180deg) saturate(1000%)";
+            canvasCtx.filter = "contrast(250%) grayscale(100%) brightness(1.8) sepia(100%) hue-rotate(190deg) saturate(1200%)";
             canvasCtx.drawImage(canvasElement, 0, 0);
             canvasCtx.restore();
         } else if (currentGesture === "index" && trackingLandmarks) {
