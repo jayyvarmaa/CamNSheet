@@ -541,7 +541,7 @@ function updateOnboardingSlides() {
 nextSlideBtn.addEventListener('click', () => {
     if (tourActiveSlide === slides.length - 1) {
         onboardingOverlay.classList.remove('active');
-        localStorage.setItem('gesturCamTourCompleted', 'true');
+        localStorage.setItem('camNSheetTourCompleted', 'true');
     } else {
         tourActiveSlide++;
         updateOnboardingSlides();
@@ -639,7 +639,7 @@ async function initCameras() {
 }
 
 // Initial start checks
-if (!localStorage.getItem('gesturCamTourCompleted')) {
+if (!localStorage.getItem('camNSheetTourCompleted')) {
     onboardingOverlay.classList.add('active');
 }
 
