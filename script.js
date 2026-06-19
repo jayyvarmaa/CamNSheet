@@ -72,33 +72,50 @@ function detectGesture(landmarks) {
     const ringOpen = isFingerOpen(landmarks, 16, 14);
     const pinkyOpen = isFingerOpen(landmarks, 20, 18);
     
-    // OK Gesture: Tip of thumb (4) and index (8) close together, others open
+    // OK Gesture: Tip of thumb (4) and index (8) close together
     const thumbIndexDist = distance(landmarks[4], landmarks[8]);
-    if (thumbIndexDist < 0.05 && middleOpen && ringOpen && pinkyOpen) {
+    if (thumbIndexDist < 0.06 && middleOpen && ringOpen && pinkyOpen) {
         return "ok";
     }
 
-    // L Gesture: Thumb and index open, middle/ring/pinky closed
+    // L Gesture: Thumb and index open, others closed
     if (thumbOpen && indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
         return "l_sign";
     }
-    
-    if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
+
+    // Count open fingers (excluding thumb)
+    const openFingersCount = [indexOpen, middleOpen, ringOpen, pinkyOpen].filter(Boolean).length;
+
+    if (openFingersCount === 0) {
         if (thumbOpen) return "thumbs_up";
         return "fist";
-    } else if (indexOpen && middleOpen && !ringOpen && !pinkyOpen) {
-        return "peace";
-    } else if (indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
-        return "index";
-    } else if (indexOpen && middleOpen && ringOpen && pinkyOpen) {
-        return "open";
-    } else if (indexOpen && !middleOpen && !ringOpen && pinkyOpen) {
-        return "rock";
-    } else if (thumbOpen && !indexOpen && !middleOpen && !ringOpen && pinkyOpen) {
-        return "call";
     }
     
-    if (indexOpen && !middleOpen && !ringOpen && !pinkyOpen) return "index";
+    if (openFingersCount === 1 && indexOpen) {
+        return "index";
+    }
+    
+    if (openFingersCount === 2 && indexOpen && middleOpen) {
+        return "peace";
+    }
+    
+    if (openFingersCount === 2 && indexOpen && pinkyOpen) {
+        return "rock";
+    }
+    
+    if (openFingersCount === 4) {
+        return "open";
+    }
+    
+    if (thumbOpen && openFingersCount === 1 && pinkyOpen) {
+        return "call";
+    }
+
+    // Fallbacks to handle slightly messy positions
+    if (indexOpen && middleOpen) return "peace";
+    if (indexOpen) return "index";
+    if (middleOpen && ringOpen && pinkyOpen) return "open";
+
     return "unknown";
 }
 
@@ -163,19 +180,29 @@ function drawMatrixRain(ctx, w, h) {
 }
 
 function drawSpotlight(ctx, w, h, x, y) {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.95)';
-    ctx.beginPath();
-    ctx.rect(0, 0, w, h);
-    ctx.arc(x, y, 160, 0, 2 * Math.PI, true);
-    ctx.fill();
+    // Create offscreen canvas for masking
+    const maskCanvas = document.createElement('canvas');
+    maskCanvas.width = w;
+    maskCanvas.height = h;
+    const maskCtx = maskCanvas.getContext('2d');
 
-    const gradient = ctx.createRadialGradient(x, y, 60, x, y, 160);
-    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.95)');
-    ctx.beginPath();
-    ctx.arc(x, y, 160, 0, 2 * Math.PI);
-    ctx.fillStyle = gradient;
-    ctx.fill();
+    // Fill mask with dark overlay
+    maskCtx.fillStyle = 'rgba(0, 0, 0, 0.93)';
+    maskCtx.fillRect(0, 0, w, h);
+
+    // Cut out spotlight circle using destination-out
+    maskCtx.globalCompositeOperation = 'destination-out';
+    const gradient = maskCtx.createRadialGradient(x, y, 40, x, y, 160);
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    
+    maskCtx.beginPath();
+    maskCtx.arc(x, y, 160, 0, 2 * Math.PI);
+    maskCtx.fillStyle = gradient;
+    maskCtx.fill();
+
+    // Draw the mask on top of the main canvas
+    ctx.drawImage(maskCanvas, 0, 0);
 }
 
 function drawDot(ctx, x, y) {
