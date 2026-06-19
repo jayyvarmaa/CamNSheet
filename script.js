@@ -54,9 +54,10 @@ function logError(msg, err) {
     }
 }
 
-// Distance helper
+// Distance helper (3D Euclidean distance to handle hand/finger angles and foreshortening)
 function distance(p1, p2) {
-    return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+    const dz = (p1.z !== undefined && p2.z !== undefined) ? (p1.z - p2.z) : 0;
+    return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(dz, 2));
 }
 
 // Check if a finger is extended
