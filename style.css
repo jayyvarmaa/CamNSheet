@@ -72,6 +72,16 @@ body, html {
     font-weight: 800;
     letter-spacing: -0.5px;
     color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
 }
 
 .logo span {
